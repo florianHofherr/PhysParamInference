@@ -29,10 +29,15 @@ conda activate physParamInference
 
 You can download the data using
 ```
-bla
+bash download_data.sh
 ```
+The script downloads all data used in the paper and stores them into a `/data/` folder.
 
 ## Usage
-The training for the different scenarios is run by `python training_***.py`. The parameters for each scenario are defined in the respective config file in the `\configs\` folder. 
+### Training
+The training for the different scenarios is run by `python training_***.py`. The parameters for each scenario are defined in the respective config file in the `/configs/` folder. 
 
-The results, including checkpoints, as well as the logs are stored in a sub folder of the `\experiments\` folder. The path is defined in the config file. You can monitor the progress of the training using tensorboard by calling `tensorboard --logidr experiments\path\to\experiment`.
+The results, including checkpoints, as well as the logs are stored in a sub folder of the `/experiments/` folder. The path is defined in the config file. You can monitor the progress of the training using tensorboard by calling `tensorboard --logidr experiments/path/to/experiment`.
+
+### Evaluation
+For each of the scenarios there is an `evaluate_***.ipynb` notebook in the `/evaluations/` folder that can be used to load and analyze the trained models.
