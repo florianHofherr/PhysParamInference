@@ -1,0 +1,62 @@
+hydra:
+  run:
+    dir: ./experiments/${now:%Y-%m-%d}/LagrangianVAE_offset/${now:%H-%M-%S}_seq19
+
+scene:
+  local_representation:
+    # MLP
+    n_layers: 6
+    hidden_dim: 64
+    
+    # Fourier Features
+    n_features: 64
+    gauss_scale: 0.1
+
+ode:
+  use_adjoint: False
+  use_damping: True
+  c_init: 0.25
+  l_pendulum_init: 1.5
+
+online_training:
+  enable: True
+  stepsize: 20
+  start_length: 5
+
+optimizer:
+  epochs: 2001
+  background:
+    lr_repr: 0.005
+    lr_scheduler_gamma_repr: 1
+    lr_scheduler_step_size_repr: 50
+  object:
+    lr_repr: 0.001
+    lr_scheduler_gamma_repr: 1
+    lr_scheduler_step_size_repr: 50
+  physics:
+    lr_physics: 0.005
+    lr_scheduler_gamma_physics: 1
+    lr_scheduler_step_size_physics: 100
+  
+  subsampling_step_size: 50
+
+data:
+  path_data: Lagrangian_VAE_data/pendulum-gym-image-dataset-test.pkl
+  T_pred: 9
+  batch_idx: 19
+  skip_steps: 0
+  offset_x: 1
+  offset_y: 1
+  
+dataloader:
+  batch_size: 65540
+  shuffle: True
+  num_workers: 8
+
+logging:
+  enable: True
+  logging_interval: 10
+  test_interval: 50
+  checkpoint_interval: 100
+
+seed: 42

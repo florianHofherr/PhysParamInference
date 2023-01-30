@@ -1,0 +1,78 @@
+hydra:
+  run:
+    dir: ./experiments/${now:%Y-%m-%d}/real_world/pendulum/${now:%H-%M-%S}
+
+scene:
+  background:
+    # MLP
+    n_layers: 8
+    hidden_dim: 512
+
+    # Fourier Features
+    n_features: 256
+    gauss_scale: 50.0
+
+  local_representation:
+    # MLP
+    n_layers: 8
+    hidden_dim: 128
+
+    # Fourier Features
+    n_features: 128
+    gauss_scale: 15.0
+
+ode:
+  use_adjoint: False
+  use_damping: True
+  c_init: 0.5
+  l_pendulum_init: 0.4
+  A_init: [200, 80]
+  x0_init: [0, 50]
+  estimate_init_from_masks: True
+
+online_training:
+  enable: True
+  stepsize: 20
+  start_length: 5
+
+loss:
+  weight_regularization_mask: 0.001
+  regularize_after_epochs: 100
+
+optimizer:
+  epochs: 801
+  background:
+    lr_repr: 9e-4
+    lr_scheduler_gamma_repr: 0.9
+    lr_scheduler_step_size_repr: 25
+  object:
+    lr_repr: 9e-4
+    lr_scheduler_gamma_repr: 0.9
+    lr_scheduler_step_size_repr: 25
+  physics:
+    lr_physics: 1e-3
+    lr_scheduler_gamma_physics: 1
+    lr_scheduler_step_size_physics: 100
+  
+data:
+  path_data: 'real_world_data/data_pendulum.npz'
+  start_idx: 0
+  skip_timesteps: 1
+  samples_train: 10
+
+homography:
+  enable: True
+  enable_after_epochs: 20
+
+dataloader:
+  batch_size: 65536
+  shuffle: True
+  num_workers: 12
+
+logging:
+  enable: True
+  logging_interval: 50
+  test_interval: 50
+  checkpoint_interval: 100
+
+seed: 42

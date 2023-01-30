@@ -1,0 +1,66 @@
+hydra:
+  run:
+    dir: ./experiments/${now:%Y-%m-%d}/synthetic/posed/woodwall/${now:%H-%M-%S}_seq9
+
+scene:
+  background:
+    # MLP
+    n_layers: 8
+    hidden_dim: 512
+
+    # Fourier Features
+    n_features: 256
+    gauss_scale: 30.0
+
+  local_representation:
+    # MLP
+    n_layers: 8
+    hidden_dim: 128
+    
+    # Fourier Features
+    n_features: 256
+    gauss_scale: 10.0
+
+online_training:
+  enable: True
+  stepsize: 10
+  start_length: 2
+
+loss:
+  weight_regularization_mask: 0.0005
+  regularize_after_epochs: 400
+
+optimizer:
+  epochs: 1201
+  background:
+    lr_repr: 9e-4
+    lr_scheduler_gamma_repr: 0.9
+    lr_scheduler_step_size_repr: 25
+  object:
+    lr_repr: 9e-4
+    lr_scheduler_gamma_repr: 0.9
+    lr_scheduler_step_size_repr: 25
+  physics:
+    lr_physics: 1e-3
+    lr_scheduler_gamma_physics: 1
+    lr_scheduler_step_size_physics: 100
+
+data:
+  path_data: synthetic_data/woodwall9
+  skip_timesteps: 3
+  max_samples: 25
+  max_samples_eval: 14      # Last time of eval must be inside the train interval due to interpolation
+  start_idx_test: 2
+
+dataloader:
+  batch_size: 65536
+  shuffle: True
+  num_workers: 12
+
+logging:
+  enable: True
+  logging_interval: 50
+  test_interval: 100
+  checkpoint_interval: 100
+
+seed: 42

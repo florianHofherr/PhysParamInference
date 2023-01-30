@@ -1,0 +1,74 @@
+hydra:
+  run:
+    dir: ./experiments/${now:%Y-%m-%d}/Spring/${now:%H-%M-%S}_seq9
+
+scene:
+  background:
+    # MLP
+    n_layers: 6
+    hidden_dim: 64
+
+    # Fourier Features
+    n_features: 64
+    gauss_scale: 5.0
+
+  local_representation:
+    # MLP
+    n_layers: 6
+    hidden_dim: 64
+    
+    # Fourier Features
+    n_features: 64
+    gauss_scale: 2.2
+
+ode:
+  use_adjoint: False
+  k_init: 1.5
+
+online_training:
+  enable: True
+  start_length: 2
+  stepsize: 30
+
+loss:
+  weight_segmentation: 0.01
+  weight_initial_pos: 0.05
+  weight_artefacts: 1.0
+  activate_artifact_loss_after: 200
+  use_center_bb: True     # Alternative: use average points
+  reduce_loss_segmentation_after: 100
+  factor_reduction: 0.2
+
+optimizer:
+  epochs: 1201
+  background:
+    lr_repr: 0.001
+    lr_scheduler_gamma_repr: 0.9954
+    lr_scheduler_step_size_repr: 50
+  object:
+    lr_repr: 0.001
+    lr_scheduler_gamma_repr: 0.9954
+    lr_scheduler_step_size_repr: 50
+  physics:
+    lr_physics: 0.005
+    lr_scheduler_gamma_physics: 1
+    lr_scheduler_step_size_physics: 100
+
+data:
+  path_data: 'paig_data/paig_data_test.pt'
+  batch_idx: 9
+  training_length: 12
+  prediction_length: 42
+
+dataloader:
+  batch_size: 65536
+  shuffle: True
+  num_workers: 8
+
+logging:
+  enable: True
+  test_interval: 20
+  logging_interval: 10
+  checkpoint_interval: 100
+
+seed: 42

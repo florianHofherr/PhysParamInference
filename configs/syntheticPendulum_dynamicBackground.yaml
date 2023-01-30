@@ -1,0 +1,45 @@
+hydra:
+  run:
+    dir: ./experiments/${now:%Y-%m-%d}/synthetic/dynamicBackground/wallclock/${now:%H-%M-%S}_seq9
+
+scene:
+  n_harmonic_functions_time: 6
+  max_frequency_time: 5
+  n_layers: 8
+  hidden_dim: 750
+
+  n_features: 256
+  gauss_scale: 30
+    
+online_training:
+  enable: False
+  stepsize: 30
+  start_length: 2
+
+normalize_time_interval: True
+  
+optimizer:
+  epochs: 2001
+  lr_repr: 9e-4
+  lr_scheduler_gamma_repr: 0.95
+  lr_scheduler_step_size_repr: 25
+
+data:
+  path_data: synthetic_data/wallclock9
+  skip_timesteps: 3
+  max_samples: 25
+  max_samples_eval: 40
+  start_idx_test: 2
+
+dataloader:
+  batch_size: 4096
+  shuffle: True
+  num_workers: 12
+
+logging:
+  enable: True
+  logging_interval: 100
+  test_interval: 100
+  checkpoint_interval: 100
+
+seed: 42

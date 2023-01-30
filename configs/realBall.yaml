@@ -1,0 +1,72 @@
+hydra:
+  run:
+    dir: ./experiments/${now:%Y-%m-%d}/real_world/ball/${now:%H-%M-%S}
+
+scene:
+  background:
+    # MLP
+    n_layers: 8
+    hidden_dim: 512
+
+    # Fourier Features
+    n_features: 256
+    gauss_scale: 30.0
+
+  local_representation:
+    # MLP
+    hidden_dim: 128
+    n_layers: 8
+
+    # Fourier Features
+    n_features: 128
+    gauss_scale: 5.0
+
+ode:
+  use_adjoint: False
+
+online_training:
+  enable: True
+  stepsize: 10
+  start_length: 8
+
+loss:
+  weight_regularization_mask: 0.001
+  regularize_after_epochs: 100
+
+optimizer:
+  epochs: 801
+  background:
+    lr_repr: 9e-4
+    lr_scheduler_gamma_repr: 0.9
+    lr_scheduler_step_size_repr: 25
+  object:
+    lr_repr: 9e-4
+    lr_scheduler_gamma_repr: 0.9
+    lr_scheduler_step_size_repr: 50
+  physics:
+    lr_physics: 0.001
+    lr_scheduler_gamma_physics: 1
+    lr_scheduler_step_size_physics: 100
+  
+data:
+  path_data: 'real_world_data/data_ball.npz'
+  start_idx: 0
+  skip_timesteps: 1
+  samples_train: 6
+
+homography:
+  enable: True
+  enable_after_epochs: 40
+
+dataloader:
+  batch_size: 65536
+  shuffle: True
+  num_workers: 12
+
+logging:
+  enable: True
+  logging_interval: 50
+  test_interval: 50
+  checkpoint_interval: 100
+
+seed: 42
